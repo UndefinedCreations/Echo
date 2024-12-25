@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.undefinedcreation"
-version = "0.0.3"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
@@ -13,18 +13,15 @@ repositories {
 
 dependencies {
     api(kotlin("stdlib"))
-
     implementation("net.md-5:SpecialSource:1.11.4")
 }
 
 
 gradlePlugin {
-
     website.set("http://discord.undefinedcreation.com/")
     vcsUrl.set("https://github.com/UndefinedCreation/UndefinedRemapper")
 
     plugins {
-
         create("mapper") {
             id = "com.undefinedcreation.mapper"
             displayName = "Undefined mapper"
@@ -33,11 +30,11 @@ gradlePlugin {
             implementationClass = "com.undefinedcreation.remapper.RemappingPlugin"
         }
     }
-
 }
 
 kotlin {
-    jvmToolchain {
-        languageVersion.set(JavaLanguageVersion.of(11))
-    }
+//    jvmToolchain {
+//        languageVersion.set(JavaLanguageVersion.of(8))
+//    }
+    jvmToolchain(21)
 }

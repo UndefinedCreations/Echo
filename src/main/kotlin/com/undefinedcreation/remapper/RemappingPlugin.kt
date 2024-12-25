@@ -6,7 +6,6 @@ import org.gradle.api.Project
 class RemappingPlugin: Plugin<Project> {
 
     override fun apply(target: Project) {
-
         target.tasks.register("remap", RemapTask::class.java) {
 
             it.group = "undefined"

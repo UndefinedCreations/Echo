@@ -48,6 +48,8 @@ abstract class RemapTask: DefaultTask() {
         val task = project.tasks.named(inputTask.getOrElse("jar")).get() as AbstractArchiveTask
         val archiveFile = task.archiveFile.get().asFile
 
+        println("Remapping Jar....")
+
         val version = mcVersion.orNull ?: throw IllegalArgumentException("Version need to be specified for ${project.path}")
 
         var fromFile = archiveFile
@@ -61,12 +63,9 @@ abstract class RemapTask: DefaultTask() {
             val procedures = iterator.next()
             procedures.remap(project, version, fromFile, tempFile)
 
-            if (shouldRemove) {
-                fromFile.delete()
-            }
+            if (shouldRemove) fromFile.delete()
 
             if (iterator.hasNext()) {
-
                 fromFile = tempFile
                 tempFile = Files.createTempFile(null, ".jar").toFile()
                 shouldRemove = true
@@ -75,24 +74,19 @@ abstract class RemapTask: DefaultTask() {
 
 
         if (createNewJar.getOrElse(false)) {
-            println("Creating new file")
             val ta = File(archiveFile.parentFile, "${project.name}-remapped.jar")
-
             tempFile.copyTo(ta, true)
         } else {
-
-            println("Overriding")
-
             Files.copy(
                 tempFile.toPath(),
                 archiveFile.toPath(),
                 StandardCopyOption.REPLACE_EXISTING
             )
-
         }
         outFile = project.provider { tempFile }
         tempFile.delete()
-        println("Successfully remapped jar ${project.path} to $action")
+
+        println("Successfully remapped!")
     }
 
     enum class Action(internal vararg val procedures: ActualProcedure) {
@@ -134,7 +128,6 @@ abstract class RemapTask: DefaultTask() {
             val inheritanceFile = project.configurations.detachedConfiguration(dependencies.create(inheritance(version))).apply {
                     isTransitive = false
                 }.singleFile
-
 
             Jar.init(jarFile).use { inputJar ->
                 Jar.init(inheritanceFile).use { inheritanceJar ->
