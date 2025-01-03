@@ -1,4 +1,4 @@
-package com.undefinedcreation.remapper
+package com.undefinedcreations.remapper
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -12,5 +12,6 @@ class RemappingPlugin: Plugin<Project> {
             it.description = "This task will remap your NMS project"
 
         }.get().dependsOn(target.tasks.named("jar").get())
+
     }
 }

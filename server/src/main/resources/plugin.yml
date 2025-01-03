@@ -1,0 +1,4 @@
+name: Remapper
+version: '${version}'
+main: com.undefinedcreation.remapper.Main
+api-version: '1.21'

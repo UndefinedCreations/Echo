@@ -1,4 +1,4 @@
-package com.undefinedcreation.remapper
+package com.undefinedcreations.remapper
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
@@ -26,7 +26,7 @@ abstract class RemapTask: DefaultTask() {
     }
 
     @get:Input
-    abstract val mcVersion: Property<String>
+    abstract val minecraftVersion: Property<String>
 
     @get:Input
     @get:Optional
@@ -50,7 +50,7 @@ abstract class RemapTask: DefaultTask() {
 
         println("Remapping Jar....")
 
-        val version = mcVersion.orNull ?: throw IllegalArgumentException("Version need to be specified for ${project.path}")
+        val version = minecraftVersion.orNull ?: throw IllegalArgumentException("Version need to be specified for ${project.path}")
 
         var fromFile = archiveFile
         var tempFile = Files.createTempFile(null, ".jar").toFile()
