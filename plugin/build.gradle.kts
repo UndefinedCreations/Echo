@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.undefinedcreations"
-version = "1.0.2"
+version = "1.0.5"
 
 repositories {
     mavenCentral()

@@ -1,9 +1,6 @@
-import com.undefinedcreation.runServer.RamAmount
-import com.undefinedcreation.runServer.ServerType
-
 plugins {
     kotlin("jvm") version "1.9.21"
-    id("com.undefinedcreation.runServer") version "0.1.0"
+    id("com.undefinedcreations.mapper") version "1.0.6"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
@@ -28,14 +25,6 @@ tasks {
     }
     compileJava {
         options.release.set(21)
-    }
-    runServer {
-        dependsOn(shadowJar)
-        serverType(ServerType.SPIGOT)
-        mcVersion("1.21.4")
-        serverFolder("run")
-        acceptMojangEula(true)
-        allowedRam(4, RamAmount.GIGABYTE)
     }
 }
 

@@ -2,9 +2,6 @@ package com.undefinedcreations.remapper
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
-import org.gradle.api.provider.Property
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.Optional
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.bundling.AbstractArchiveTask
@@ -16,7 +13,11 @@ import net.md_5.specialsource.JarMapping
 import net.md_5.specialsource.JarRemapper
 import net.md_5.specialsource.provider.JarProvider
 import net.md_5.specialsource.provider.JointProvider
+import org.gradle.api.Task
+import org.gradle.api.file.RegularFileProperty
+import org.gradle.api.internal.file.copy.CopyAction
 import org.gradle.api.provider.Provider
+import java.nio.file.CopyOption
 import java.nio.file.StandardCopyOption
 
 abstract class RemapTask: DefaultTask() {
@@ -25,36 +26,42 @@ abstract class RemapTask: DefaultTask() {
         outputs.upToDateWhen { false }
     }
 
-    @get:Input
-    abstract val minecraftVersion: Property<String>
-
-    @get:Input
-    @get:Optional
-    abstract val inputTask: Property<String>
-
-    @get:Input
-    @get:Optional
-    abstract val action: Property<Action>
-
-    @get:Input
-    @get:Optional
-    abstract val createNewJar: Property<Boolean>
+    private var minecraftVersion: String? = null
+    private var action: Action = Action.MOJANG_TO_SPIGOT
+    private var inputTask: Task = project.tasks.named("shadowJar").let {
+        if (!it.isPresent) project.tasks.named("jar").get() else {
+            dependsOn(it)
+            it.get()
+        }
+    }
+    private var createNewJar = false
 
     @OutputFile
-    var outFile: Provider<File> = project.provider { File(project.layout.buildDirectory.asFile.get(), "${project.name}-${project.version}.jar") }
+    var outFile: File = File("${project.layout.buildDirectory.get().asFile}/cache", "${project.name}-${project.version}.jar")
+
+    fun minecraftVersion(minecraftVersion: String) { this.minecraftVersion = minecraftVersion }
+    fun inputTask(task: Provider<out Task>) {
+        dependsOn(task)
+        inputTask = task.get()
+    }
+    fun action(action: Action) { this.action = action }
+    fun createNewJar(newJar: Boolean) { createNewJar = newJar }
 
     @TaskAction
     fun execute() {
-        val task = project.tasks.named(inputTask.getOrElse("jar")).get() as AbstractArchiveTask
+        val task = inputTask as AbstractArchiveTask
         val archiveFile = task.archiveFile.get().asFile
+
+        val cacheFolder = File(project.layout.buildDirectory.get().asFile, "cache")
+        if (!cacheFolder.exists()) cacheFolder.mkdirs()
 
         println("Remapping Jar....")
 
-        val version = minecraftVersion.orNull ?: throw IllegalArgumentException("Version need to be specified for ${project.path}")
+        val version = minecraftVersion ?: throw IllegalArgumentException("Version need to be specified for ${project.path}")
 
         var fromFile = archiveFile
         var tempFile = Files.createTempFile(null, ".jar").toFile()
-        val action = action.getOrElse(Action.MOJANG_TO_SPIGOT)
+        val action = Action.MOJANG_TO_SPIGOT
         val iterator = action.procedures.iterator()
 
         var shouldRemove = false
@@ -73,7 +80,7 @@ abstract class RemapTask: DefaultTask() {
         }
 
 
-        if (createNewJar.getOrElse(false)) {
+        if (createNewJar) {
             val ta = File(archiveFile.parentFile, "${project.name}-remapped.jar")
             tempFile.copyTo(ta, true)
         } else {
@@ -83,7 +90,10 @@ abstract class RemapTask: DefaultTask() {
                 StandardCopyOption.REPLACE_EXISTING
             )
         }
-        outFile = project.provider { tempFile }
+
+
+        val output = outFile
+        Files.copy(tempFile.toPath(), output.toPath(), StandardCopyOption.REPLACE_EXISTING)
         tempFile.delete()
 
         println("Successfully remapped!")
@@ -144,5 +154,4 @@ abstract class RemapTask: DefaultTask() {
             }
         }
     }
-
 }
