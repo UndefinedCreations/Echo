@@ -11,7 +11,9 @@ class RemappingPlugin: Plugin<Project> {
             it.group = "undefined"
             it.description = "This task will remap your NMS project"
 
-        }.get().dependsOn(target.tasks.named("jar").get())
+        }.get().also {
+            target.tasks.named("jar").get().finalizedBy(it)
+        }
 
     }
 }

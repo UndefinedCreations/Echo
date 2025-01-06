@@ -28,11 +28,14 @@ abstract class RemapTask: DefaultTask() {
 
     private var minecraftVersion: String? = null
     private var action: Action = Action.MOJANG_TO_SPIGOT
-    private var inputTask: Task = project.tasks.named("shadowJar").let {
-        if (!it.isPresent) project.tasks.named("jar").get() else {
-            dependsOn(it)
-            it.get()
+    private var inputTask: Task = project.tasks.named("jar").let {
+        if ("shadowJar" in project.tasks.names) {
+            val shadowJar = project.tasks.named("shadowJar")
+            setDependsOn(mutableListOf(shadowJar))
+            return@let shadowJar.get()
         }
+        setDependsOn(mutableListOf(it))
+        it.get()
     }
     private var createNewJar = false
 
@@ -41,7 +44,7 @@ abstract class RemapTask: DefaultTask() {
 
     fun minecraftVersion(minecraftVersion: String) { this.minecraftVersion = minecraftVersion }
     fun inputTask(task: Provider<out Task>) {
-        dependsOn(task)
+        setDependsOn(mutableListOf(task))
         inputTask = task.get()
     }
     fun action(action: Action) { this.action = action }
@@ -49,8 +52,8 @@ abstract class RemapTask: DefaultTask() {
 
     @TaskAction
     fun execute() {
-        val task = inputTask as AbstractArchiveTask
-        val archiveFile = task.archiveFile.get().asFile
+        val task = inputTask
+        val archiveFile = task.outputs.files.singleFile
 
         val cacheFolder = File(project.layout.buildDirectory.get().asFile, "cache")
         if (!cacheFolder.exists()) cacheFolder.mkdirs()
