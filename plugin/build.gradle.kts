@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.undefinedcreations"
-version = "1.1.0"
+version = "1.1.1"
 
 repositories {
     mavenCentral()
@@ -32,15 +32,15 @@ gradlePlugin {
     }
 }
 
-tasks {
-    compileKotlin {
-        kotlinOptions.jvmTarget = "1.8"
-    }
-    compileJava {
-        options.release.set(8)
-    }
-}
-
-kotlin {
-    jvmToolchain(8)
-}
+//tasks {
+//    compileKotlin {
+//        kotlinOptions.jvmTarget = "1.8"
+//    }
+//    compileJava {
+//        options.release.set(8)
+//    }
+//}
+//
+//kotlin {
+//    jvmToolchain(8)
+//}
