@@ -10,11 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin
 class Main : JavaPlugin(), Listener {
 
     override fun onEnable() {
-
         Bukkit.getPluginManager().registerEvents(this, this)
-
-        println(EntityType.entries.size)
-
     }
 
     override fun onDisable() {

@@ -10,4 +10,4 @@ plugins {
 }
 rootProject.name = "UndefinedRemapper"
 
-include("plugin")
+include("plugin", "server")

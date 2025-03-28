@@ -14,10 +14,7 @@ import net.md_5.specialsource.JarRemapper
 import net.md_5.specialsource.provider.JarProvider
 import net.md_5.specialsource.provider.JointProvider
 import org.gradle.api.Task
-import org.gradle.api.file.RegularFileProperty
-import org.gradle.api.internal.file.copy.CopyAction
 import org.gradle.api.provider.Provider
-import java.nio.file.CopyOption
 import java.nio.file.StandardCopyOption
 
 abstract class RemapTask: DefaultTask() {

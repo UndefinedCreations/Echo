@@ -2,10 +2,11 @@ plugins {
     kotlin("jvm") version "1.9.21"
     id("maven-publish")
     id("com.gradle.plugin-publish") version "1.2.1"
+    id("com.gradleup.shadow") version "8.3.6"
 }
 
 group = "com.undefinedcreations"
-version = "1.1.1"
+version = "1.1.16"
 
 repositories {
     mavenCentral()
@@ -14,6 +15,7 @@ repositories {
 dependencies {
     api(kotlin("stdlib"))
     implementation("net.md-5:SpecialSource:1.11.4")
+    implementation("com.google.code.gson:gson:2.12.1")
 }
 
 
@@ -32,15 +34,8 @@ gradlePlugin {
     }
 }
 
-//tasks {
-//    compileKotlin {
-//        kotlinOptions.jvmTarget = "1.8"
-//    }
-//    compileJava {
-//        options.release.set(8)
-//    }
-//}
-//
-//kotlin {
-//    jvmToolchain(8)
-//}
+tasks {
+    shadowJar {
+        archiveClassifier = ""
+    }
+}
