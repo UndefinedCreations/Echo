@@ -1,10 +1,10 @@
-package com.undefinedcreations.remapper
+package com.undefinedcreations.echo.tasks
 
+import com.undefinedcreations.echo.EchoPlugin
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import org.gradle.api.tasks.bundling.AbstractArchiveTask
 import java.io.File
 import java.nio.file.Files
 
@@ -17,13 +17,13 @@ import org.gradle.api.Task
 import org.gradle.api.provider.Provider
 import java.nio.file.StandardCopyOption
 
-abstract class RemapTask: DefaultTask() {
+abstract class RemapTask : DefaultTask() {
 
     init {
         outputs.upToDateWhen { false }
     }
 
-    private var minecraftVersion: String? = null
+    private var minecraftVersion: String? = EchoPlugin.mcVersion
     private var action: Action = Action.MOJANG_TO_SPIGOT
     private var inputTask: Task = project.tasks.named("jar").let {
         if ("shadowJar" in project.tasks.names) {

@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.undefinedcreations"
-version = "1.1.16"
+version = "0.0.3"
 
 repositories {
     mavenCentral()
@@ -16,20 +16,21 @@ dependencies {
     api(kotlin("stdlib"))
     implementation("net.md-5:SpecialSource:1.11.4")
     implementation("com.google.code.gson:gson:2.12.1")
+    implementation("com.jeff-media:javafinder:1.4.4")
 }
 
 
 gradlePlugin {
-    website.set("https://discord.undefinedcreation.com/")
-    vcsUrl.set("https://github.com/UndefinedCreation/UndefinedRemapper")
+    website.set("https://discord.undefinedcreations.com/")
+    vcsUrl.set("https://github.com/UndefinedCreations/UndefinedRemapper")
 
     plugins {
-        create("mapper") {
-            id = "com.undefinedcreations.mapper"
-            displayName = "Undefined mapper"
-            description = "This gradle plugin will remapped you NMS projects."
-            tags = listOf("spigot", "mapping", "NMS", "mojang", "utils", "remapper")
-            implementationClass = "com.undefinedcreations.remapper.RemappingPlugin"
+        create("echo") {
+            id = "com.undefinedcreations.echo"
+            displayName = "Echo"
+            description = "This gradle plugin will remapped you NMS projects. It can also build and import BuildTools."
+            tags = listOf("spigot", "mapping", "NMS", "mojang", "utils", "remapper", "minecraft", "buildtools")
+            implementationClass = "com.undefinedcreations.echo.EchoPlugin"
         }
     }
 }

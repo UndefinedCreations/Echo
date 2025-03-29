@@ -1,7 +1,7 @@
 package com.undefinedcreation.remapper
 
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket
 import org.bukkit.Bukkit
-import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
