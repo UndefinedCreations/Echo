@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm") version "1.9.21"
-    id("com.undefinedcreations.echo") version "0.0.2"
+    id("com.undefinedcreations.echo") version "0.0.4"
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    echo.buildTools("1.21.4")
+    echo("1.21.4")
 }
 
 tasks {

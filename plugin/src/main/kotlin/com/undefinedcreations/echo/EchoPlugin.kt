@@ -1,7 +1,7 @@
 package com.undefinedcreations.echo
 
-import com.undefinedcreations.echo.buildTools.BuildToolsManager
-import com.undefinedcreations.echo.buildTools.RemapDependenciesExtension
+import com.undefinedcreations.echo.dependency.BuildToolsManager
+import com.undefinedcreations.echo.dependency.RemapDependenciesExtension
 import com.undefinedcreations.echo.tasks.ClearCacheTask
 import com.undefinedcreations.echo.tasks.RemapTask
 import org.gradle.api.Plugin

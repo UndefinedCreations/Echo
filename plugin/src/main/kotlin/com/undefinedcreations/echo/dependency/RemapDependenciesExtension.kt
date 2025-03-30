@@ -1,4 +1,4 @@
-package com.undefinedcreations.echo.buildTools
+package com.undefinedcreations.echo.dependency
 
 import com.undefinedcreations.echo.EchoPlugin
 import org.gradle.api.artifacts.dsl.DependencyHandler
@@ -6,8 +6,7 @@ import org.gradle.api.artifacts.dsl.DependencyHandler
 abstract class RemapDependenciesExtension(
     private val dependencies: DependencyHandler
 ) {
-
-    fun buildTools(
+    operator fun invoke(
         minecraftVersion: String,
         mojangMapping: Boolean = true,
         generateSource: Boolean = true,

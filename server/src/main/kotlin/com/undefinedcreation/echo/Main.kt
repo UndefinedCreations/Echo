@@ -1,6 +1,5 @@
-package com.undefinedcreation.remapper
+package com.undefinedcreation.echo
 
-import net.minecraft.network.protocol.game.ClientboundAddEntityPacket
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

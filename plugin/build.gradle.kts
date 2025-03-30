@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.undefinedcreations"
-version = "0.0.3"
+version = "0.0.4"
 
 repositories {
     mavenCentral()
@@ -21,8 +21,8 @@ dependencies {
 
 
 gradlePlugin {
-    website.set("https://discord.undefinedcreations.com/")
-    vcsUrl.set("https://github.com/UndefinedCreations/UndefinedRemapper")
+    website = "https://discord.undefinedcreations.com/"
+    vcsUrl = "https://github.com/UndefinedCreations/UndefinedRemapper"
 
     plugins {
         create("echo") {

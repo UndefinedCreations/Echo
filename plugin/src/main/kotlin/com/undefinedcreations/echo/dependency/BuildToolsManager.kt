@@ -1,4 +1,4 @@
-package com.undefinedcreations.echo.buildTools
+package com.undefinedcreations.echo.dependency
 
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser

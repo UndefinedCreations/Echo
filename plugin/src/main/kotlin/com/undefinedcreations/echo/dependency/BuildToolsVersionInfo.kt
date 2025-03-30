@@ -1,4 +1,4 @@
-package com.undefinedcreations.echo.buildTools
+package com.undefinedcreations.echo.dependency
 
 import java.net.URL
 
