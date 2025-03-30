@@ -21,6 +21,42 @@ object BuildToolsManager {
 
     fun createUndefinedFolder() { echoFolder.mkdirs() }
 
+    fun checkBuildToolsAndInstall() {
+        val lastVersion = getLastBuildToolsVersionInfo()
+        if (getLocalBuildToolsVersion() < lastVersion.version) {
+            println("Installing BuildTools - ${lastVersion.version}")
+            installBuildTools()
+            println("Finished installing BuildTools")
+            setLocalBuildToolsVersion(lastVersion.version)
+        }
+    }
+
+    fun buildBuildTools(
+        version: String,
+        remapped: Boolean,
+        generateSource: Boolean,
+        generateDocs: Boolean,
+        printDebug: Boolean
+    ): File {
+        val outputFolder = File(echoFolder, version)
+        outputFolder.mkdirs()
+        val finalJar = File(outputFolder, "spigot-$version.jar")
+        if (finalJar.exists()) return File(outputFolder, "spigot-$version.jar")
+        getInstalledJavaVersion(version).let { if (it != -1) throw UnsupportedJavaVersion(it) }
+
+        val command = "java -jar ${buildToolsJAR.path} --rev " +
+                "$version ${if (remapped) "--remapped" else ""} " +
+                "--output-dir ${outputFolder.path} " +
+                "${if (generateSource) "--generate-source" else ""} " +
+                if (generateDocs) "--generate-docs" else ""
+
+        info("Building BuildTools...")
+        runJar(command, outputFolder, printDebug)
+        info("Built BuildTools.")
+
+        return finalJar
+    }
+
     /**
      * This method will return -1 if the correct version is installed else it will return the version needed
      */
@@ -77,42 +113,6 @@ object BuildToolsManager {
         val json = JsonObject()
         json.addProperty("buildToolsVersion", version)
         buildToolsVersionFile.writeText(json.toString())
-    }
-
-    fun checkBuildToolsAndInstall() {
-        val lastVersion = getLastBuildToolsVersionInfo()
-        if (getLocalBuildToolsVersion() < lastVersion.version) {
-            println("Installing BuildTools - ${lastVersion.version}")
-            installBuildTools()
-            println("Finished installing BuildTools")
-            setLocalBuildToolsVersion(lastVersion.version)
-        }
-    }
-
-    fun buildBuildTools(
-        version: String,
-        remapped: Boolean,
-        generateSource: Boolean,
-        generateDocs: Boolean,
-        printDebug: Boolean
-    ): File {
-        val outputFolder = File(echoFolder, version)
-        outputFolder.mkdirs()
-        val finalJar = File(outputFolder, "spigot-$version.jar")
-        if (finalJar.exists()) return File(outputFolder, "spigot-$version.jar")
-        getInstalledJavaVersion(version).let { if (it != -1) throw UnsupportedJavaVersion(it) }
-
-        val command = "java -jar ${buildToolsJAR.path} --rev " +
-                "$version ${if (remapped) "--remapped" else ""} " +
-                "--output-dir ${outputFolder.path} " +
-                "${if (generateSource) "--generate-source" else ""} " +
-                if (generateDocs) "--generate-docs" else ""
-
-        info("Building BuildTools...")
-        runJar(command, outputFolder, printDebug)
-        info("Built BuildTools.")
-
-        return finalJar
     }
 
     private fun runJar(command: String, outputFolder: File, print: Boolean): String {

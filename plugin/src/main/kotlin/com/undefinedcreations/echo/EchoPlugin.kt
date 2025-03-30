@@ -36,7 +36,7 @@ class EchoPlugin: Plugin<Project> {
 
     companion object {
         lateinit var project: Project
-        var mcVersion: String? = null
+        var minecraftVersion: String? = null
     }
 }
 

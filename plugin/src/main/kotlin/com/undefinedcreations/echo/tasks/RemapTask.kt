@@ -23,7 +23,7 @@ abstract class RemapTask : DefaultTask() {
         outputs.upToDateWhen { false }
     }
 
-    private var minecraftVersion: String? = EchoPlugin.mcVersion
+    private var minecraftVersion: String? = EchoPlugin.minecraftVersion
     private var action: Action = Action.MOJANG_TO_SPIGOT
     private var inputTask: Task = project.tasks.named("jar").let {
         if ("shadowJar" in project.tasks.names) {

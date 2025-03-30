@@ -5,8 +5,8 @@ plugins {
     id("com.gradleup.shadow") version "8.3.6"
 }
 
-group = "com.undefinedcreations"
-version = "0.0.4"
+group = properties["group"]!!
+version = properties["version"]!!
 
 repositories {
     mavenCentral()
