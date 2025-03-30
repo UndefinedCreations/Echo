@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm") version "1.9.21"
-    id("com.undefinedcreations.echo") version "0.0.4"
+    id("com.undefinedcreations.echo")
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
