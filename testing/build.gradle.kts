@@ -1,6 +1,6 @@
 plugins {
     kotlin("jvm") version "1.9.21"
-    id("com.undefinedcreations.mapper") version "1.0.6"
+    id("com.undefinedcreations.echo")
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
@@ -13,7 +13,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.21.4-R0.1-SNAPSHOT")
+    echo("1.21.4")
 }
 
 tasks {
