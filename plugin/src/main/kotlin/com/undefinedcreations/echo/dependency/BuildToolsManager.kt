@@ -31,6 +31,8 @@ object BuildToolsManager {
         }
     }
 
+
+    @Suppress("NAME_SHADOWING")
     fun buildBuildTools(
         version: String,
         remapped: Boolean,
@@ -38,6 +40,9 @@ object BuildToolsManager {
         generateDocs: Boolean,
         printDebug: Boolean
     ): File {
+
+        val remapped = if (hasRemapping(version)) remapped else false
+
         val outputFolder = File(echoFolder, "$version${if (remapped) "-mojang-mapped" else ""}")
         outputFolder.mkdirs()
         val finalJar = File(outputFolder, "spigot-$version.jar")
@@ -55,6 +60,21 @@ object BuildToolsManager {
         info("Built BuildTools. ($version)")
 
         return finalJar
+    }
+
+    /**
+     * This method will check if the version has mojang mappings.
+     */
+    private fun hasRemapping(version: String): Boolean {
+        val split = version.split(".")
+        val mainVersion = split[1].toInt()
+        if (mainVersion < 14) return false
+        if (mainVersion == 14) {
+            if (split.getOrNull(2) == null) return false
+            val subVersion = split[2].toInt()
+            return subVersion == 4
+        }
+        return true
     }
 
     /**
@@ -109,12 +129,24 @@ object BuildToolsManager {
         return JsonParser.parseString(buildToolsVersionFile.readText()).asJsonObject["buildToolsVersion"].asInt
     }
 
+    /**
+     * Sets the cache version of build tools
+     */
     private fun setLocalBuildToolsVersion(version: Int) {
         val json = JsonObject()
         json.addProperty("buildToolsVersion", version)
         buildToolsVersionFile.writeText(json.toString())
     }
 
+    /**
+     * This method will be the build tools jar
+     *
+     * @param command the command that will be running the jar
+     * @param outputFolder the output folder for the jar
+     * @param print if it prints the output into console
+     *
+     * @return The full output from the jar
+     */
     private fun runJar(command: String, outputFolder: File, print: Boolean): String {
         val processBuilder = ProcessBuilder(command.split(" "))
         processBuilder.directory(outputFolder)
