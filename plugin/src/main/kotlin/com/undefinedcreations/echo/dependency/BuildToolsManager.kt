@@ -38,7 +38,7 @@ object BuildToolsManager {
         generateDocs: Boolean,
         printDebug: Boolean
     ): File {
-        val outputFolder = File(echoFolder, version)
+        val outputFolder = File(echoFolder, "$version${if (remapped) "-mojang-mapped" else ""}")
         outputFolder.mkdirs()
         val finalJar = File(outputFolder, "spigot-$version.jar")
         if (finalJar.exists()) return File(outputFolder, "spigot-$version.jar")
@@ -46,13 +46,13 @@ object BuildToolsManager {
 
         val command = "java -jar ${buildToolsJAR.path} --rev " +
                 "$version ${if (remapped) "--remapped" else ""} " +
-                "--output-dir ${outputFolder.path} " +
+                "--output-dir ${outputFolder.path} --generate-docs --nogui " +
                 "${if (generateSource) "--generate-source" else ""} " +
                 if (generateDocs) "--generate-docs" else ""
 
-        info("Building BuildTools...")
+        info("Building BuildTools... ($version)")
         runJar(command, outputFolder, printDebug)
-        info("Built BuildTools.")
+        info("Built BuildTools. ($version)")
 
         return finalJar
     }
