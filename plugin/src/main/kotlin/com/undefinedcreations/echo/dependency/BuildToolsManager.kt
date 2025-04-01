@@ -19,8 +19,14 @@ object BuildToolsManager {
     private val buildToolsVersionFile = File(echoFolder, "buildToolsVersion.json")
     private val buildToolsJAR = File(echoFolder, "BuildTools.jar")
 
+    /**
+     * Create the cache folder
+     */
     fun createUndefinedFolder() { echoFolder.mkdirs() }
 
+    /**
+     * This method will check the local build tools version and update if needed
+     */
     fun checkBuildToolsAndInstall() {
         val lastVersion = getLastBuildToolsVersionInfo()
         if (getLocalBuildToolsVersion() < lastVersion.version) {
@@ -31,7 +37,15 @@ object BuildToolsManager {
         }
     }
 
-
+    /**
+     * This method will run build tools at a set minecraft version
+     *
+     * @param version the minecraft version that needs to be build
+     * @param remapped if it should build the mojang mappings
+     * @param generateSource if it should build the sources
+     * @param generateDocs if it should build the docs with the jar. This is only the craftbukkit docs
+     * @param printDebug if it should print out the jar debug info
+     */
     @Suppress("NAME_SHADOWING")
     fun buildBuildTools(
         version: String,

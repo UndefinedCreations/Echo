@@ -6,6 +6,10 @@ import org.gradle.api.artifacts.dsl.DependencyHandler
 abstract class RemapDependenciesExtension(
     private val dependencies: DependencyHandler
 ) {
+    /**
+     * This method will build tools of the select minecraft version with the correct options.
+     * Next it will add the build tools that was build as a dependency.
+     */
     operator fun invoke(
         minecraftVersion: String,
         mojangMapping: Boolean = true,
