@@ -56,6 +56,7 @@ object BuildToolsManager {
     ): File {
 
         val remapped = if (hasRemapping(version)) remapped else false
+        if (remapped) { EchoPlugin.minecraftVersion = version }
 
         val outputFolder = File(echoFolder, "$version${if (remapped) "-mojang-mapped" else ""}")
         outputFolder.mkdirs()

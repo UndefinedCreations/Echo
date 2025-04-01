@@ -19,6 +19,5 @@ abstract class RemapDependenciesExtension(
     ) {
         BuildToolsManager.buildBuildTools(minecraftVersion, mojangMapping, generateSource, generateDocs, printDebug)
         dependencies.add("compileOnly", "org.spigotmc:spigot:$minecraftVersion-R0.1-SNAPSHOT${if (mojangMapping) ":remapped-mojang" else ""}")
-        EchoPlugin.minecraftVersion = minecraftVersion
     }
 }

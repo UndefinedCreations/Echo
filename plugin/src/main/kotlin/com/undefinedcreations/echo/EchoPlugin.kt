@@ -26,6 +26,8 @@ class EchoPlugin: Plugin<Project> {
 
         target.dependencies.extensions.create("echo", RemapDependenciesExtension::class.java, target.dependencies)
 
+        target.repositories.mavenLocal()
+
         setupBuildTools()
     }
 
