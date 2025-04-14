@@ -1,4 +1,4 @@
-package com.undefinedcreations.echo.dependency
+package com.undefinedcreations.echo.ext
 
 import java.net.URL
 

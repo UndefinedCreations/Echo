@@ -1,4 +1,4 @@
-package com.undefinedcreations.echo.dependency
+package com.undefinedcreations.echo.ext
 
 import org.gradle.api.artifacts.dsl.DependencyHandler
 
@@ -16,9 +16,6 @@ abstract class RemapDependenciesExtension(
         generateDocs: Boolean = true,
         printDebug: Boolean = false
     ) {
-        val minorVersion = minecraftVersion.split('.')[1].toInt()
-        if (mojangMappings && minorVersion <= 16) throw IllegalArgumentException("Mojang mappings aren't supported on versions 1.14.3 or below.")
-
         BuildToolsManager.buildBuildTools(minecraftVersion, mojangMappings, generateSource, generateDocs, printDebug)
         dependencies.add("compileOnly", "org.spigotmc:spigot:$minecraftVersion-R0.1-SNAPSHOT${if (mojangMappings) ":remapped-mojang" else ""}")
     }
