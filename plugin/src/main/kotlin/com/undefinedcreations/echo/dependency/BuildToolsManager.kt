@@ -55,8 +55,10 @@ object BuildToolsManager {
         generateDocs: Boolean,
         printDebug: Boolean
     ): File {
-        val remapped = if (hasRemapping(version)) remapped else false
-        if (remapped) { EchoPlugin.minecraftVersion = version }
+        if (remapped) {
+            EchoPlugin.minecraftVersion = version
+            if (!hasRemapping(version)) throw IllegalArgumentException("Mojang mappings aren't supported on versions 1.14.3 or below.")
+        }
 
         val outputFolder = File(echoFolder, "$version${if (remapped) "-mojang-mapped" else ""}")
         outputFolder.mkdirs()
@@ -82,12 +84,12 @@ object BuildToolsManager {
      */
     private fun hasRemapping(version: String): Boolean {
         val split = version.split(".")
-        val mainVersion = split[1].toInt()
-        if (mainVersion < 14) return false
-        if (mainVersion == 14) {
+        val majorVersion = split[1].toInt()
+        if (majorVersion < 14) return false
+        if (majorVersion == 14) {
             if (split.getOrNull(2) == null) return false
-            val subVersion = split[2].toInt()
-            return subVersion == 4
+            val minorVersion = split[2].toInt()
+            return minorVersion == 4
         }
         return true
     }

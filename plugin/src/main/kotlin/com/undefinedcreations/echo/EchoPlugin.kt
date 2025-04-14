@@ -40,6 +40,7 @@ class EchoPlugin: Plugin<Project> {
         lateinit var project: Project
         var minecraftVersion: String? = null
     }
+
 }
 
 fun info(message: String) = println(message)
