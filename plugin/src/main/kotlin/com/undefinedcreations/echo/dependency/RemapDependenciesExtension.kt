@@ -1,23 +1,25 @@
 package com.undefinedcreations.echo.dependency
 
-import com.undefinedcreations.echo.EchoPlugin
 import org.gradle.api.artifacts.dsl.DependencyHandler
 
 abstract class RemapDependenciesExtension(
     private val dependencies: DependencyHandler
 ) {
     /**
-     * This method will build tools of the select minecraft version with the correct options.
-     * Next it will add the build tools that was build as a dependency.
+     * Builds build tools of the selected Minecraft version with the correct options.
+     * Then it'll add the build tools that was build as a dependency.
      */
     operator fun invoke(
         minecraftVersion: String,
-        mojangMapping: Boolean = true,
+        mojangMappings: Boolean = true,
         generateSource: Boolean = true,
         generateDocs: Boolean = true,
         printDebug: Boolean = false
     ) {
-        BuildToolsManager.buildBuildTools(minecraftVersion, mojangMapping, generateSource, generateDocs, printDebug)
-        dependencies.add("compileOnly", "org.spigotmc:spigot:$minecraftVersion-R0.1-SNAPSHOT${if (mojangMapping) ":remapped-mojang" else ""}")
+        val minorVersion = minecraftVersion.split('.')[1].toInt()
+        if (mojangMappings && minorVersion <= 16) throw IllegalArgumentException("Mojang mappings aren't supported on versions 1.16.5 or below.")
+
+        BuildToolsManager.buildBuildTools(minecraftVersion, mojangMappings, generateSource, generateDocs, printDebug)
+        dependencies.add("compileOnly", "org.spigotmc:spigot:$minecraftVersion-R0.1-SNAPSHOT${if (mojangMappings) ":remapped-mojang" else ""}")
     }
 }
