@@ -1,6 +1,7 @@
 package com.undefinedcreations.echo.tasks
 
 import com.undefinedcreations.echo.EchoPlugin
+import com.undefinedcreations.echo.info
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.tasks.OutputFile
@@ -55,7 +56,7 @@ abstract class RemapTask : DefaultTask() {
         val cacheFolder = File(project.layout.buildDirectory.get().asFile, "cache")
         if (!cacheFolder.exists()) cacheFolder.mkdirs()
 
-        println("Remapping Jar....")
+        info("Remapping Jar....")
 
         val version = minecraftVersion ?: throw IllegalArgumentException("Version need to be specified for ${project.path}")
 
@@ -96,7 +97,7 @@ abstract class RemapTask : DefaultTask() {
         Files.copy(tempFile.toPath(), output.toPath(), StandardCopyOption.REPLACE_EXISTING)
         tempFile.delete()
 
-        println("Successfully remapped!")
+        info("Successfully remapped!")
     }
 
     enum class Action(internal vararg val procedures: ActualProcedure) {

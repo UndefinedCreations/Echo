@@ -42,6 +42,4 @@ class EchoPlugin: Plugin<Project> {
     }
 }
 
-fun info(message: String) {
-    println(message)
-}
+fun info(message: String) = println(message)

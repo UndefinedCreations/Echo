@@ -13,7 +13,8 @@ repositories {
 }
 
 dependencies {
-    echo("1.21.4")
+    echo("1.16.5", mojangMappings = false, printDebug = true)
+    echo("1.19.4", printDebug = true)
 }
 
 tasks {

@@ -3,8 +3,9 @@ package com.undefinedcreations.echo.dependency
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.jeff_media.javafinder.JavaFinder
+import com.jeff_media.javafinder.JavaInstallation
 import com.undefinedcreations.echo.EchoPlugin
-import com.undefinedcreations.echo.exceptions.UnsupportedJavaVersion
+import com.undefinedcreations.echo.exceptions.UnsupportedJavaVersionException
 import com.undefinedcreations.echo.info
 import java.io.BufferedReader
 import java.io.File
@@ -20,7 +21,7 @@ object BuildToolsManager {
     private val buildToolsJAR = File(echoFolder, "BuildTools.jar")
 
     /**
-     * Create the cache folder
+     * Create the cache folder.
      */
     fun createUndefinedFolder() { echoFolder.mkdirs() }
 
@@ -29,12 +30,12 @@ object BuildToolsManager {
      */
     fun checkBuildToolsAndInstall() {
         val lastVersion = getLastBuildToolsVersionInfo()
-        if (getLocalBuildToolsVersion() < lastVersion.version) {
-            println("Installing BuildTools - ${lastVersion.version}")
-            installBuildTools()
-            println("Finished installing BuildTools")
-            setLocalBuildToolsVersion(lastVersion.version)
-        }
+        if (getLocalBuildToolsVersion() >= lastVersion.version) return
+
+        info("Installing BuildTools - ${lastVersion.version}")
+        installBuildTools()
+        info("Finished installing BuildTools")
+        setLocalBuildToolsVersion(lastVersion.version)
     }
 
     /**
@@ -54,7 +55,6 @@ object BuildToolsManager {
         generateDocs: Boolean,
         printDebug: Boolean
     ): File {
-
         val remapped = if (hasRemapping(version)) remapped else false
         if (remapped) { EchoPlugin.minecraftVersion = version }
 
@@ -62,15 +62,15 @@ object BuildToolsManager {
         outputFolder.mkdirs()
         val finalJar = File(outputFolder, "spigot-$version.jar")
         if (finalJar.exists()) return File(outputFolder, "spigot-$version.jar")
-        getInstalledJavaVersion(version).let { if (it != -1) throw UnsupportedJavaVersion(it) }
+        val javaVersion = getNeededJavaVersion(version).javaExecutable
 
-        val command = "java -jar ${buildToolsJAR.path} --rev " +
+        val command = "$javaVersion -jar ${buildToolsJAR.path} --rev " +
                 "$version ${if (remapped) "--remapped" else ""} " +
-                "--output-dir ${outputFolder.path} --generate-docs --nogui " +
+                "--output-dir ${outputFolder.path} --nogui " +
                 "${if (generateSource) "--generate-source" else ""} " +
                 if (generateDocs) "--generate-docs" else ""
 
-        info("Building BuildTools... ($version)")
+        info("Building BuildTools with command: $command")
         runJar(command, outputFolder, printDebug)
         info("Built BuildTools. ($version)")
 
@@ -93,23 +93,21 @@ object BuildToolsManager {
     }
 
     /**
-     * This method will return -1 if the correct version is installed else it will return the version needed
+     * Returns the version needed or throws a [UnsupportedJavaVersionException].
      */
     @Suppress("ConvertTwoComparisonsToRangeCheck")
-    private fun getInstalledJavaVersion(version: String): Int {
+    private fun getNeededJavaVersion(minecraftVersion: String): JavaInstallation {
         val installations = JavaFinder.builder().build().findInstallationsAsync().get()
-        val uri = URI.create("https://hub.spigotmc.org/versions/$version.json").toURL()
+        val uri = URI.create("https://hub.spigotmc.org/versions/$minecraftVersion.json").toURL()
         val response = JsonParser.parseString(uri.readText()).asJsonObject
 
         val versionsArray = response["javaVersions"].asJsonArray
         val minJava = versionsArray[0].asInt
         val maxJava = versionsArray[1].asInt
 
-        val installedVersions = installations.map { it.version.classFileMajorVersion }
-
-        for (installedVersion in installedVersions)
-            if (minJava <= installedVersion && maxJava >= installedVersion) return -1
-        return maxJava
+        for (installedVersion in installations)
+            if (minJava <= installedVersion.version.classFileMajorVersion && maxJava >= installedVersion.version.classFileMajorVersion) return installedVersion
+        throw UnsupportedJavaVersionException(minJava, maxJava)
     }
 
     /**
@@ -173,7 +171,7 @@ object BuildToolsManager {
             var line: String?
             while (reader.readLine().also { line = it } != null) {
                 string.append(line).append("\n")
-                if (print) println(line)
+                if (print) info(line.toString())
             }
         }
         process.waitFor()
