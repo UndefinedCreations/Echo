@@ -24,7 +24,7 @@ abstract class RemapTask : DefaultTask() {
         outputs.upToDateWhen { false }
     }
 
-    private var minecraftVersion: String? = EchoPlugin.minecraftVersion
+    private var minecraftVersion: String? = null
     private var action: Action = Action.MOJANG_TO_SPIGOT
     private var inputTask: Task = project.tasks.named("jar").let { jar ->
         if ("shadowJar" in project.tasks.names) {
@@ -57,13 +57,13 @@ abstract class RemapTask : DefaultTask() {
 
         var fromFile = archiveFile
 
-        val version = EchoPlugin.minecraftVersion ?: throw IllegalArgumentException("Version needs to be specified for ${project.path}")
+        val version = (minecraftVersion ?: EchoPlugin.minecraftVersions[project.path]) ?: throw IllegalArgumentException("Version needs to be specified for ${project.path}")
         if (checkVersion(version)) {
             Files.copy(fromFile.toPath(), outFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
             return
         }
 
-        info("Remapping Jar....")
+        info("Remapping Jar.... ($version)")
 
         var tempFile = Files.createTempFile(null, ".jar").toFile()
         val action = Action.MOJANG_TO_SPIGOT
@@ -99,7 +99,7 @@ abstract class RemapTask : DefaultTask() {
         Files.copy(tempFile.toPath(), output.toPath(), StandardCopyOption.REPLACE_EXISTING)
         tempFile.delete()
 
-        info("Successfully remapped!")
+        info("Successfully remapped! ($version)")
     }
 
     /**
