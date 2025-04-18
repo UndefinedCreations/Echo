@@ -26,14 +26,14 @@ abstract class RemapTask : DefaultTask() {
 
     private var minecraftVersion: String? = EchoPlugin.minecraftVersion
     private var action: Action = Action.MOJANG_TO_SPIGOT
-    private var inputTask: Task = project.tasks.named("jar").let {
+    private var inputTask: Task = project.tasks.named("jar").let { jar ->
         if ("shadowJar" in project.tasks.names) {
             val shadowJar = project.tasks.named("shadowJar")
-            setDependsOn(mutableListOf(shadowJar))
+            dependsOn(shadowJar)
             return@let shadowJar.get()
         }
-        setDependsOn(mutableListOf(it))
-        it.get()
+        dependsOn(jar)
+        jar.get()
     }
     private var createNewJar = false
 
@@ -42,7 +42,7 @@ abstract class RemapTask : DefaultTask() {
 
     fun minecraftVersion(minecraftVersion: String) { this.minecraftVersion = minecraftVersion }
     fun inputTask(task: Provider<out Task>) {
-        setDependsOn(mutableListOf(task))
+        dependsOn(task)
         inputTask = task.get()
     }
     fun action(action: Action) { this.action = action }

@@ -18,7 +18,7 @@ class Main : JavaPlugin(), Listener {
 
     @EventHandler
     fun onJoin(e: PlayerJoinEvent) {
-        e.player.sendMessage("Hello world!")
+        e.player.sendMessage("Hello jashfkjasgfklas!")
     }
 
 }
