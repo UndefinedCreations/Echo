@@ -47,7 +47,6 @@ object BuildToolsManager {
      * @param generateDocs if it should build the docs with the jar. This is only the craftbukkit docs
      * @param printDebug if it should print out the jar debug info
      */
-    @Suppress("NAME_SHADOWING")
     fun buildBuildTools(
         version: String,
         remapped: Boolean,
@@ -55,10 +54,7 @@ object BuildToolsManager {
         generateDocs: Boolean,
         printDebug: Boolean
     ): File {
-        if (remapped) {
-            EchoPlugin.minecraftVersion = version
-            if (!hasRemapping(version)) throw IllegalArgumentException("Mojang mappings aren't supported on versions 1.14.3 or below.")
-        }
+        EchoPlugin.minecraftVersion = version
 
         val outputFolder = File(echoFolder, "$version${if (remapped) "-mojang-mapped" else ""}")
         outputFolder.mkdirs()
@@ -98,7 +94,7 @@ object BuildToolsManager {
      * Returns the version needed or throws a [UnsupportedJavaVersionException].
      */
     @Suppress("ConvertTwoComparisonsToRangeCheck")
-    private fun getNeededJavaVersion(minecraftVersion: String): JavaInstallation {
+    fun getNeededJavaVersion(minecraftVersion: String): JavaInstallation {
         val installations = JavaFinder.builder().build().findInstallationsAsync().get()
         val uri = URI.create("https://hub.spigotmc.org/versions/$minecraftVersion.json").toURL()
         val response = JsonParser.parseString(uri.readText()).asJsonObject

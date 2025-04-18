@@ -7,7 +7,7 @@ import com.undefinedcreations.echo.tasks.RemapTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
-class EchoPlugin: Plugin<Project> {
+class EchoPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         project = target
@@ -25,7 +25,6 @@ class EchoPlugin: Plugin<Project> {
         }
 
         target.dependencies.extensions.create("echo", RemapDependenciesExtension::class.java, target.dependencies)
-
         target.repositories.mavenLocal()
 
         setupBuildTools()

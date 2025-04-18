@@ -50,17 +50,21 @@ abstract class RemapTask : DefaultTask() {
 
     @TaskAction
     fun execute() {
-        val task = inputTask
-        val archiveFile = task.outputs.files.singleFile
+        val archiveFile = inputTask.outputs.files.singleFile
 
         val cacheFolder = File(project.layout.buildDirectory.get().asFile, "cache")
         if (!cacheFolder.exists()) cacheFolder.mkdirs()
 
+        var fromFile = archiveFile
+
+        val version = EchoPlugin.minecraftVersion ?: throw IllegalArgumentException("Version needs to be specified for ${project.path}")
+        if (checkVersion(version)) {
+            Files.copy(fromFile.toPath(), outFile.toPath(), StandardCopyOption.REPLACE_EXISTING)
+            return
+        }
+
         info("Remapping Jar....")
 
-        val version = minecraftVersion ?: throw IllegalArgumentException("Version need to be specified for ${project.path}")
-
-        var fromFile = archiveFile
         var tempFile = Files.createTempFile(null, ".jar").toFile()
         val action = Action.MOJANG_TO_SPIGOT
         val iterator = action.procedures.iterator()
@@ -80,7 +84,6 @@ abstract class RemapTask : DefaultTask() {
             }
         }
 
-
         if (createNewJar) {
             val ta = File(archiveFile.parentFile, "${project.name}-remapped.jar")
             tempFile.copyTo(ta, true)
@@ -92,12 +95,21 @@ abstract class RemapTask : DefaultTask() {
             )
         }
 
-
         val output = outFile
         Files.copy(tempFile.toPath(), output.toPath(), StandardCopyOption.REPLACE_EXISTING)
         tempFile.delete()
 
         info("Successfully remapped!")
+    }
+
+    /**
+     * Returns true if the version is below 1.17.
+     *
+     * The `minecraftVersion` property should not be null.
+     */
+    private fun checkVersion(version: String): Boolean {
+        val minorVersion = version.split('.')[1].toInt()
+        return minorVersion <= 16
     }
 
     enum class Action(internal vararg val procedures: ActualProcedure) {

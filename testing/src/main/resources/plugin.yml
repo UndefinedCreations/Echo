@@ -1,4 +1,4 @@
 name: Remapper
 version: '${version}'
 main: com.undefinedcreation.echo.Main
-api-version: '1.21'
+api-version: '1.13'
