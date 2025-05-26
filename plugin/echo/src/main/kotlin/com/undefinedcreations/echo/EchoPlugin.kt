@@ -37,7 +37,7 @@ class EchoPlugin : Plugin<Project> {
 
     companion object {
         lateinit var project: Project
-        var minecraftVersion: String? = null
+        val minecraftVersions: HashMap<String, String?> = hashMapOf()
     }
 
 }

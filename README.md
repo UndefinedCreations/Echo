@@ -3,5 +3,5 @@
 This gradle plugin is made to be able to remap you NMS project to a different mappings. This is mainly used for mojang remapped to spigot mapped
 
 ## Documentation
-[Documentation](https://docs.undefinedcreation.com/gradle-plugins/remapper)
+[Documentation](https://docs.undefinedcreations.com/gradle-plugins/echo/importing)
 

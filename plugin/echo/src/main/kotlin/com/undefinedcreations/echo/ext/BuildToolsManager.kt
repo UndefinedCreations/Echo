@@ -54,7 +54,7 @@ object BuildToolsManager {
         generateDocs: Boolean,
         printDebug: Boolean
     ): File {
-        EchoPlugin.minecraftVersion = version
+        EchoPlugin.minecraftVersions[EchoPlugin.project.path] = version
 
         val outputFolder = File(echoFolder, "$version${if (remapped) "-mojang-mapped" else ""}")
         outputFolder.mkdirs()

@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     kotlin("jvm") version "1.9.21"
     id("maven-publish")
@@ -36,7 +38,21 @@ gradlePlugin {
 }
 
 tasks {
+    compileKotlin {
+        compilerOptions.jvmTarget = JvmTarget.JVM_1_8
+    }
+    compileJava {
+        options.release = 8
+    }
     shadowJar {
         archiveClassifier = ""
     }
+}
+
+java {
+    disableAutoTargetJvm()
+}
+
+kotlin {
+    jvmToolchain(21)
 }

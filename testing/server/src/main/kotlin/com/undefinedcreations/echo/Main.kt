@@ -1,4 +1,4 @@
-package com.undefinedcreation.echo
+package com.undefinedcreations.echo
 
 import org.bukkit.Bukkit
 import org.bukkit.event.EventHandler
@@ -12,13 +12,10 @@ class Main : JavaPlugin(), Listener {
         Bukkit.getPluginManager().registerEvents(this, this)
     }
 
-    override fun onDisable() {
-
-    }
-
     @EventHandler
     fun onJoin(e: PlayerJoinEvent) {
-        e.player.sendMessage("Hello world!")
+        val nms = NMS1_21_4()
+        nms.run(e.player)
     }
 
 }
