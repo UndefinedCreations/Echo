@@ -1,3 +1,5 @@
+import com.undefinedcreations.echo.tasks.RemapTask
+
 plugins {
     java
     id("com.undefinedcreations.echo")
@@ -12,4 +14,11 @@ repositories {
 dependencies {
     echo("1.21.5", printDebug = true)
     compileOnly(project(":common"))
+}
+
+tasks {
+    remap {
+        minecraftVersion("1.21.4")
+        createNewJar(true)
+    }
 }

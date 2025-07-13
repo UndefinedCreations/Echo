@@ -29,13 +29,17 @@ object BuildToolsManager {
      * This method will check the local build tools version and update if needed
      */
     fun checkBuildToolsAndInstall() {
-        val lastVersion = getLastBuildToolsVersionInfo()
-        if (getLocalBuildToolsVersion() >= lastVersion.version) return
+        try {
+            val lastVersion = getLastBuildToolsVersionInfo()
+            if (getLocalBuildToolsVersion() >= lastVersion.version) return
 
-        info("Installing BuildTools - ${lastVersion.version}")
-        installBuildTools()
-        info("Finished installing BuildTools")
-        setLocalBuildToolsVersion(lastVersion.version)
+            info("Installing BuildTools - ${lastVersion.version}")
+            installBuildTools()
+            info("Finished installing BuildTools")
+            setLocalBuildToolsVersion(lastVersion.version)
+        } catch (e: Exception) {
+            println("[Warning] Wasn't able to get lastest BuildTools")
+        }
     }
 
     /**

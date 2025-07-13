@@ -2,20 +2,22 @@ package com.undefinedcreations.echo.tasks
 
 import com.undefinedcreations.echo.EchoPlugin
 import com.undefinedcreations.echo.info
-import org.gradle.api.DefaultTask
-import org.gradle.api.Project
-import org.gradle.api.tasks.OutputFile
-import org.gradle.api.tasks.TaskAction
-import java.io.File
-import java.nio.file.Files
-
 import net.md_5.specialsource.Jar
 import net.md_5.specialsource.JarMapping
 import net.md_5.specialsource.JarRemapper
 import net.md_5.specialsource.provider.JarProvider
 import net.md_5.specialsource.provider.JointProvider
+import org.gradle.api.DefaultTask
+import org.gradle.api.Project
 import org.gradle.api.Task
 import org.gradle.api.provider.Provider
+import org.gradle.api.tasks.OutputFile
+import org.gradle.api.tasks.TaskAction
+import java.io.BufferedReader
+import java.io.File
+import java.io.InputStreamReader
+import java.nio.charset.StandardCharsets
+import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 
 abstract class RemapTask : DefaultTask() {
@@ -88,11 +90,7 @@ abstract class RemapTask : DefaultTask() {
             val ta = File(archiveFile.parentFile, "${project.name}-remapped.jar")
             tempFile.copyTo(ta, true)
         } else {
-            Files.copy(
-                tempFile.toPath(),
-                archiveFile.toPath(),
-                StandardCopyOption.REPLACE_EXISTING
-            )
+            archiveFile.writeBytes(tempFile.readBytes())
         }
 
         val output = outFile

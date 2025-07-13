@@ -8,6 +8,7 @@ import org.bukkit.entity.Player
 class NMS1_21_5 : NMS {
     override fun run(player: Player) {
         val serverPlayer = (player as CraftPlayer).handle
+        player.persistentDataContainer
         val overworld = MinecraftServer.getServer().overworld()
         val sharedSpawnPos = overworld.sharedSpawnPos
         serverPlayer.sendSystemMessage(Component.literal(sharedSpawnPos.asLong().toString()))

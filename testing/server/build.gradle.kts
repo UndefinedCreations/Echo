@@ -30,10 +30,9 @@ tasks {
         options.release.set(8)
     }
     runServer {
-        minecraftVersion("1.21.4")
-        perVersionFolder(true)
-        acceptMojangEula()
         serverType(ServerType.SPIGOT)
+        minecraftVersion("1.21.4")
+
     }
 }
 
